@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <meta name="GENERATOR" content="UTF-8 Writer" />
+<title>843タイピング</title>
+
+<script>
+document.onkeydown = typeGame;  //キー押下時に関数typeGame()を呼び出す
+
+//英単語を格納する配列
+var q_array = new Array("come","get","give");
+
+//英単語の説明文を格納する配列
+var exp_array = new Array("来る","受け取る","与える");
+
+//キーコードを英文字に変換する
+var kc_to_str = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+
+//乱数を格納する配列
+var rnd = new Array();
+
+// ダウンロード用の配列
+var download_array = new Array();
+
+//グローバル変数群
+var str_cnt = 0 ;  //文字の何番目を入力しているか示す値
+var cnt = 0 ;             //何問目か格納
+var typStart,typEnd;   //開始時と終了時の時刻を格納
+var cnt_upper_limit = 3 ; //cntの上限値
+var one_str_array = new Array(); //q_array[rnd[0]]を一文字毎に分割したものを格納した配列
+var one_str_array_length = 0; //q_array[rnd[0]]を一文字毎に分割したものを格納した配列の長さ
+var input_str = "" //プレイヤーの間違いを含まない入力
+var player_input = "" //プレイヤーの間違いを含む入力
+
+//0～2までの乱数を10個作成して配列rndに格納する関数
+function ransu()
+{
+  for (var i = 0 ; i < 10 ; i++)
+  {
+    rnd[i] = Math.floor( Math.random() * cnt_upper_limit);
+  }
+}
+
+//タイピングゲームの問題をセットする関数
+function gameSet()
+{
+  //カウント数をクリアする
+  cnt=0;
+
+  //0～2までの乱数を10個持っている配列rndを作る
+  ransu();
+
+  //q_array[rnd[0]]を一文字毎に分割したものを格納した配列
+  one_str_array = q_array[rnd[cnt]].split("");
+
+  //q_array[rnd[0]]を一文字毎に分割したものを格納した配列の長さ
+  one_str_array_length = one_str_array.length
+
+  //英単語の表示
+  var vword = document.getElementById('word');
+  vword.textContent = q_array[rnd[cnt]];
+
+  //説明文の表示
+  var vexplanation = document.getElementById('explanation');
+  vexplanation.textContent = exp_array[rnd[cnt]];
+}
+
+//キー入力を受け取る関数
+function typeGame(evt)
+{
+  var vinp = document.getElementById('inp');
+  var kc;  //入力されたキーコードを格納する変数
+  //入力されたキーのキーコードを取得
+  if (document.all)
+  {
+    kc = event.keyCode;
+  }
+  else
+  {
+    kc = evt.which;
+  }
+
+  player_input = player_input + kc_to_str[kc]
+
+  //入力されたキーコードと、問題文のキーコードを比較
+  if (kc_to_str[kc] == one_str_array[str_cnt])
+  {
+    input_str = input_str + one_str_array[str_cnt]
+    vinp.textContent = input_str;
+    str_cnt++;
+    vinp.style.color = 'blue';
+
+    //　一つの単語のキーコードが全て押された時の処理
+    if (str_cnt == one_str_array_length)
+    {
+      // 
+      download_array.push([]);
+
+      // 初期化
+      player_input = ""
+      str_cnt = 0;
+      vinp.textContent = "入力が表示されます";
+      vinp.style.color = 'black';
+      input_str = ""
+      cnt++; //カウント数を＋１にする
+
+      // 問題を入れ替える
+      //q_array[rnd[0]]を一文字毎に分割したものを格納した配列
+      one_str_array = q_array[rnd[cnt]].split("");
+
+      //q_array[rnd[0]]を一文字毎に分割したものを格納した配列の長さ
+      one_str_array_length = one_str_array.length
+
+      //英単語の表示
+      var vword = document.getElementById('word');
+      vword.textContent = q_array[rnd[cnt]];
+
+      //説明文の表示
+      var vexplanation = document.getElementById('explanation');
+      vexplanation.textContent = exp_array[rnd[cnt]];
+
+      //最初の1文字が入力された時間を記録する
+      // if (cnt == 0)
+      // {
+      //   typStart = new Date();
+      // }
+      
+      //全文字入力したか確認
+      if ( cnt == cnt_upper_limit)
+      {
+        //色もいじりたい
+        var vword = document.getElementById('word');
+        vword.textContent = "おめでとうございます！";
+        var vexplanation = document.getElementById('explanation');
+        vexplanation.textContent = "クリアしました！";
+        var vinp = document.getElementById('inp');
+        vinp.textContent = "ダウンロードをお願いします";
+
+        //全文字入力していたら、終了時間を記録する
+        // typEnd = new Date();
+        
+        //終了時間－開始時間で掛かったミリ秒を取得する
+        // var keika = typEnd - typStart;
+        
+        //1000で割って「切捨て」、秒数を取得
+        // var sec = Math.floor( keika/1000 );
+        
+        //1000で割った「余り(%で取得できる）」でミリ秒を取得
+        // var msec = keika % 1000;
+      }
+    }
+  }
+}
+
+
+// download buttonの部分
+var $id = function(id) {return document.getElementById(id);}
+
+window.onload = function()
+{
+    $id("download-link").addEventListener("click", function(){
+        var value = download_array;
+        var href = "data:application/octet-stream," + encodeURIComponent(value);
+        this.setAttribute("href", href);
+    }, false);
+}
+
+</script>
+
+<style type="text/css">
+
+p {
+  font-weight: bold; /* normal　太さ */
+  font-size: 30px; /* 大きさ */
+  text-align: center; /* left, right 位置*/
+  line-height: 40px; /* 行の高さ(40-20=20を上下に振り分ける) */
+}
+
+</style>
+
+</head>
+<body onload="gameSet()">
+<h1>843タイピングゲーム ver 0.1</h1>
+<p id="word">a</p>
+<p id="explanation">b</p>
+<p id="inp">入力が表示されます</p>
+
+<a id="download-link" href="#">Download</a>
+
+</body>
+</html>
+
