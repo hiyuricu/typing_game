@@ -3,7 +3,7 @@
 <head>
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
  <meta name="GENERATOR" content="UTF-8 Writer" />
-<title>843タイピング</title>
+<title>タイピング</title>
 
 <script>
 document.onkeydown = typeGame;  //キー押下時に関数typeGame()を呼び出す
@@ -86,16 +86,28 @@ function typeGame(evt)
   //入力されたキーコードと、問題文のキーコードを比較
   if (kc_to_str[kc] == one_str_array[str_cnt])
   {
+    // 最初の1文字が入力された時間を記録する
+    if (str_cnt == 0)
+    {
+      typStart = new Date();
+    }
+
     input_str = input_str + one_str_array[str_cnt]
     vinp.textContent = input_str;
-    str_cnt++;
+    str_cnt++ ;
     vinp.style.color = 'blue';
 
-    //　一つの単語のキーコードが全て押された時の処理
+    //　一つの単語のキーコードが全て入力された時の処理
     if (str_cnt == one_str_array_length)
     {
-      // 
-      download_array.push([]);
+      // 一つの単語のキーコードが全て入力された時の時間を記録する
+      typEnd = new Date();
+      
+      //終了時間－開始時間で掛かったミリ秒を取得する
+      var keika = typEnd - typStart;
+
+      // 入力してもらったデータを配列に格納する
+      download_array.push([player_input, input_str, keika, "\n"]);
 
       // 初期化
       player_input = ""
@@ -120,12 +132,6 @@ function typeGame(evt)
       var vexplanation = document.getElementById('explanation');
       vexplanation.textContent = exp_array[rnd[cnt]];
 
-      //最初の1文字が入力された時間を記録する
-      // if (cnt == 0)
-      // {
-      //   typStart = new Date();
-      // }
-      
       //全文字入力したか確認
       if ( cnt == cnt_upper_limit)
       {
@@ -136,18 +142,6 @@ function typeGame(evt)
         vexplanation.textContent = "クリアしました！";
         var vinp = document.getElementById('inp');
         vinp.textContent = "ダウンロードをお願いします";
-
-        //全文字入力していたら、終了時間を記録する
-        // typEnd = new Date();
-        
-        //終了時間－開始時間で掛かったミリ秒を取得する
-        // var keika = typEnd - typStart;
-        
-        //1000で割って「切捨て」、秒数を取得
-        // var sec = Math.floor( keika/1000 );
-        
-        //1000で割った「余り(%で取得できる）」でミリ秒を取得
-        // var msec = keika % 1000;
       }
     }
   }
@@ -163,6 +157,7 @@ window.onload = function()
         var value = download_array;
         var href = "data:application/octet-stream," + encodeURIComponent(value);
         this.setAttribute("href", href);
+        download_array = []
     }, false);
 }
 
@@ -181,7 +176,7 @@ p {
 
 </head>
 <body onload="gameSet()">
-<h1>843タイピングゲーム ver 0.1</h1>
+<h1>タイピングゲーム843 ver 0.1</h1>
 <p id="word">a</p>
 <p id="explanation">b</p>
 <p id="inp">入力が表示されます</p>
