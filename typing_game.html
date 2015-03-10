@@ -116,7 +116,7 @@ function typeGame(evt)
       download_array.push([player_input, input_str, spelling_time, "\n"]);
 
       // 入力してもらったデータを一つの文字列にしてテキストファイルに書き込む
-      var user_input = player_input + "," + input_str + "," + spelling_time + "," + "\n";
+      var user_input = player_input + "," + input_str + "," + spelling_time + "\n";
       $.get('write_input.php', {
       	name: user_input
       });
