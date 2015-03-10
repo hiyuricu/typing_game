@@ -115,7 +115,7 @@ function typeGame(evt)
       // 入力してもらったデータを配列に格納する
       download_array.push([player_input, input_str, spelling_time, "\n"]);
 
-      // 入力してもらったデータを一つの文字列にしてテキストファイルに書き込む
+      // 入力してもらったデータを一つの文字列にしてphpに送る
       var user_input = player_input + "," + input_str + "," + spelling_time + "\n";
       $.get('write_input.php', {
       	name: user_input
