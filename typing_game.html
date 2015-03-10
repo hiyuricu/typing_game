@@ -5,6 +5,7 @@
  <meta name="GENERATOR" content="UTF-8 Writer" />
 <title>タイピングゲーム</title>
 
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script>
 document.onkeydown = typeGame;  //キー押下時に関数typeGame()を呼び出す
 
@@ -113,6 +114,12 @@ function typeGame(evt)
 
       // 入力してもらったデータを配列に格納する
       download_array.push([player_input, input_str, spelling_time, "\n"]);
+
+      // 入力してもらったデータを一つの文字列にしてテキストファイルに書き込む
+      var user_input = player_input + "," + input_str + "," + spelling_time + "," + "\n";
+      $.get('write_input.php', {
+      	name: user_input
+      });
 
       // 初期化
       player_input = ""
