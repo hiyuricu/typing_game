@@ -22,7 +22,7 @@ var kc_to_str = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,2
 var rnd = new Array();
 
 // ダウンロード用の配列
-var download_array = new Array();
+var download_string = "";
 
 //グローバル変数群
 var str_cnt = 0 ;  //文字の何番目を入力しているか示す値
@@ -112,14 +112,14 @@ function typeGame(evt)
       //終了時間－開始時間で掛かったミリ秒を取得する
       var spelling_time = typEnd - typStart;
 
-      // 入力してもらったデータを配列に格納する
-      download_array.push([player_input, input_str, spelling_time, "\n"]);
-
       // 入力してもらったデータを一つの文字列にしてphpに送る
       var user_input = player_input + "," + input_str + "," + spelling_time + "\n";
       $.get('write_input.php', {
       	name: user_input
       });
+
+      // 入力してもらったデータを文字列にして連結する
+      download_string = download_string + user_input;
 
       // 初期化
       player_input = ""
@@ -186,10 +186,10 @@ var $id = function(id) {return document.getElementById(id);}
 window.onload = function()
 {
     $id("download-link").addEventListener("click", function(){
-        var value = download_array;
+        var value = download_string;
         var href = "data:application/octet-stream," + encodeURIComponent(value);
         this.setAttribute("href", href);
-        download_array = []
+        download_string = ""
     }, false);
 }
 
