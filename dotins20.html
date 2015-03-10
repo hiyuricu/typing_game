@@ -12,7 +12,7 @@
         <input type="button" id="greet" value="Greet!">
     </p>
     <div id="result"></div>
-  
+
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script>
         $(function() {
@@ -25,9 +25,11 @@
             // $.get
 
             $('#greet').click(function() {
-
+                
                 $.get('write_input.php', {
                     name: $('#name').val()
+                }, function(data) {
+                    $('#result').html(data);
                 });
 
             });
@@ -36,6 +38,3 @@
     </script>
 </body>
 </html>
-
-
-
