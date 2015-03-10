@@ -24,12 +24,14 @@
             // $.post
             // $.get
 
+            var mo = "qwer";
+            var ji = "123";
+            var moji = mo + "," + ji + "," + "\n";
+
             $('#greet').click(function() {
                 
                 $.get('write_input.php', {
-                    name: $('#name').val()
-                }, function(data) {
-                    $('#result').html(data);
+                    name: moji
                 });
 
             });
