@@ -25,15 +25,24 @@ var rnd = new Array();
 var download_string = "";
 
 //グローバル変数群
-var str_cnt = 0 ;  //文字の何番目を入力しているか示す値
-var cnt = 0 ;             //何問目か格納
+var str_cnt = 0;  //文字の何番目を入力しているか示す値
+var cnt = 0;             //何問目か格納
 var typStart,typEnd;   //開始時と終了時の時刻を格納
-var cnt_upper_limit = 200; //cntの上限値
+var cnt_upper_limit = 100; //cntの上限値
 var one_str_array = new Array(); //q_array[rnd[0]]を一文字毎に分割したものを格納した配列
 var one_str_array_length = 0; //q_array[rnd[0]]を一文字毎に分割したものを格納した配列の長さ
 var input_str = "" //プレイヤーの間違いを含まない入力
 var player_input = "" //プレイヤーの間違いを含む入力
 
+var score = 0 //プレイヤーのスコア
+var point_addition = 100
+var point_subtraction = 10
+var time_bonus_60 = 5000
+var time_bonus_100 = 4000
+var time_bonus_150 = 3000
+var time_bonus_210 = 2000
+var time_bonus_280 = 1000
+var clear_bonus = 500
 
 //乱数をcnt_upper_limit個作成して配列rndに格納する関数。乱数は問題数が1000個であれば、0,1,2,...,999のいずれかの値をとる
 function make_random_number_array()
@@ -42,6 +51,13 @@ function make_random_number_array()
   {
     rnd[i] = Math.floor( Math.random() * exp_array.length);
   }
+}
+
+//タイマーを走らせている部分の関数。全問題を解いた後にstopする
+function timer()
+{
+    document.getElementById('sec').innerHTML = (((new Date()).getTime() - startTime) / 1000).toFixed(2);
+    timerid = setTimeout(function() { timer(); }, 70);
 }
 
 //タイピングゲームの問題をセットする関数
@@ -75,6 +91,9 @@ function typeGame(evt)
   var vexplanation = document.getElementById('explanation');
   var vinp = document.getElementById('inp');
   var vouen = document.getElementById('ouen');
+  var vscore = document.getElementById('score');
+
+  var starttime; //一番最初の一文字目が入力された時の時間
 
   var kc;  //入力されたキーコードを格納する変数
   //入力されたキーのキーコードを取得
@@ -87,12 +106,19 @@ function typeGame(evt)
     kc = evt.which;
   }
 
+  //一番最初の一文字目が入力された時の時間を得る
+  if (cnt == 0 && str_cnt == 0)
+  {
+    startTime = (new Date()).getTime();
+    timer();
+  }
+
   player_input = player_input + kc_to_str[kc]
 
   //入力されたキーコードと、問題文のキーコードの文字列を比較
   if (kc_to_str[kc] == one_str_array[str_cnt])
   {
-    // 最初の1文字が入力された時間を記録する
+    // 単語の最初の1文字が入力された時間を記録する
     if (str_cnt == 0)
     {
       typStart = new Date();
@@ -112,14 +138,18 @@ function typeGame(evt)
       //終了時間－開始時間で掛かったミリ秒を取得する
       var spelling_time = typEnd - typStart;
 
-      // 入力してもらったデータを一つの文字列にしてphpに送る
+      // 入力されたデータを一つの文字列にしてphpに送る
       var user_input = player_input + "," + input_str + "," + spelling_time + "\n";
       $.get('write_input.php', {
       	name: user_input
       });
 
-      // 入力してもらったデータを文字列にして連結する
+      // 入力されたデータを文字列にして連結する
       download_string = download_string + user_input;
+
+      // scoreを更新し、表示する
+      score = score + point_addition
+      vscore.textContent = score;
 
       // 初期化
       player_input = ""
@@ -145,7 +175,7 @@ function typeGame(evt)
       //全文字入力したか確認
       if (cnt == cnt_upper_limit)
       {
-        //色もいじりたい
+        clearTimeout(timerid);
         vword.textContent = "おめでとうございます！";
         vexplanation.textContent = "クリアしました！";
         vinp.textContent = "ダウンロードをお願いします";
@@ -153,6 +183,36 @@ function typeGame(evt)
         vexplanation.style.color = 'aqua';
         vinp.style.color = 'green';
         vouen.textContent = "";
+
+        var clear_time = (((new Date()).getTime() - startTime) / 1000).toFixed(3)
+
+        // クリア時間に応じて加算されるスコアの関数部分
+        if (clear_time <= 60)
+        {
+        	score = score + time_bonus_60
+        }
+        else if (60 < clear_time && clear_time <= 100)
+        {
+        	score = score + time_bonus_100
+        }
+        else if (100 < clear_time && clear_time <= 150)
+        {
+        	score = score + time_bonus_150
+        }
+        else if (150 < clear_time && clear_time <= 210)
+        {
+        	score = score + time_bonus_210
+        }
+        else if (210 < clear_time && clear_time <= 280)
+        {
+        	score = score + time_bonus_280
+        }
+        else if (280 < clear_time)
+        {
+        	score = score + clear_bonus
+        }
+
+        vscore.textContent = score; //スコア表示の更新
       }
 
       if (cnt == 10)
@@ -160,22 +220,28 @@ function typeGame(evt)
         vouen.textContent = "10問クリア！どんどんいこう！";
         vouen.style.color = 'maroon';
       }
-      if (cnt == 50)
+      if (cnt == 25)
       {
-        vouen.textContent = "50問クリア！いい調子！";
+        vouen.textContent = "25問クリア！いい調子！";
         vouen.style.color = 'teal';
       }
-      if (cnt == 100)
+      if (cnt == 50)
       {
-        vouen.textContent = "100問クリア！ちょうど半分！";
+        vouen.textContent = "50問クリア！ちょうど半分！";
         vouen.style.color = 'navy';
       }
-      if (cnt == 150)
+      if (cnt == 75)
       {
-        vouen.textContent = "150問クリア！あともう一息！";
+        vouen.textContent = "75問クリア！あともう一息！";
         vouen.style.color = 'blue';
       }
     }
+  }
+  else
+  {
+  	// scoreを更新し、表示する
+  	score = score - point_subtraction
+  	vscore.textContent = score;
   }
 }
 
@@ -208,14 +274,18 @@ p {
 
 </head>
 <body onload="gameSet()">
-<h1>タイピングゲーム ver 0.13</h1>
+<h1>タイピングゲーム ver 0.21</h1>
+<br>
 <p id="word">a</p>
 <p id="explanation">b</p>
 <p id="inp">英単語を入力して下さい</p>
+<br>
+<br>
+<p id="sec">現在のタイム:0.00</p>
+<p id="score">現在のスコア:0</p>
 
 <a id="download-link" href="#">Download:ゲームを終了する時に押してファイルを保存して下さい</a><br><br>
-<a id="ouen" style="font-size: 23px;">英単語を200個入力するとクリアです</a>
+<a id="ouen" style="font-size: 23px;">英単語を100個入力するとクリアです</a>
 
 </body>
 </html>
-
