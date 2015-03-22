@@ -28,7 +28,7 @@ var download_string = "";
 var str_cnt = 0;  //文字の何番目を入力しているか示す値
 var cnt = 0;             //何問目か格納
 var typStart,typEnd;   //開始時と終了時の時刻を格納
-var cnt_upper_limit = 100; //cntの上限値
+var cnt_upper_limit = 3; //cntの上限値
 var one_str_array = new Array(); //q_array[rnd[0]]を一文字毎に分割したものを格納した配列
 var one_str_array_length = 0; //q_array[rnd[0]]を一文字毎に分割したものを格納した配列の長さ
 var input_str = "" //プレイヤーの間違いを含まない入力
@@ -210,11 +210,11 @@ function typeGame(evt)
         vinp.style.color = 'green';
         vouen.textContent = "";
 
-        var clear_time = (((new Date()).getTime() - startTime) / 1000).toFixed(3)
-        var time_bonus = Math.round(500000 / clear_time)
-        score = score + time_bonus
+        var clear_time = (((new Date()).getTime() - startTime) / 1000).toFixed(3);
+        var time_bonus = Math.round(500000 / clear_time);
+        score = score + time_bonus;
 
-        $.get('write_highscore.php', { score: score }); //ハイスコアより高かったら実行するようにする
+        $.get('write_highscore.php', { highscore: score }); //ハイスコアより高かったら実行するようにする
 
         vscore.textContent = score; //スコア表示の更新
       }

@@ -1,6 +1,6 @@
 <?php
 $file = 'highscore.txt';
-$current = $_GET['score'];
+$current = $_GET['highscore'];
 $highscore = file_get_contents("highscore.txt");
 
 if ($current > $highscore) {
