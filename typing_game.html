@@ -44,9 +44,11 @@ var time_bonus_210 = 2000
 var time_bonus_280 = 1000
 var clear_bonus = 500
 
+var wrong_sound_count = 0; // soundのcurrentTimeをiphoneに対応させるためのフラグ
+var right_sound_count = 0;
+
 //乱数をcnt_upper_limit個作成して配列rndに格納する関数。乱数は問題数が1000個であれば、0,1,2,...,999のいずれかの値をとる
-function make_random_number_array()
-{
+function make_random_number_array() {
   for (var i = 0 ; i < cnt_upper_limit + 1 ; i++)
   {
     rnd[i] = Math.floor( Math.random() * exp_array.length);
@@ -54,10 +56,34 @@ function make_random_number_array()
 }
 
 //タイマーを走らせている部分の関数。全問題を解いた後にstopする
-function timer()
-{
+function timer() {
     document.getElementById('sec').innerHTML = (((new Date()).getTime() - startTime) / 1000).toFixed(2);
     timerid = setTimeout(function() { timer(); }, 70);
+}
+
+// 正解の音
+function right_sound() {
+	//初回([right_sound_count = 0])以外だったら音声ファイルを巻き戻す
+	if(right_sound_count > 0) {
+		document.getElementById("right_sound_id").currentTime = 0;
+	}
+
+	//[ID:right_sound]の音声ファイルを再生[play()]する
+	document.getElementById("right_sound_id").play();
+
+	//初回再生が終わった判定用に[right_sound_count]の値を0から1に変更する
+	right_sound_count = 1;
+}
+
+// タイプミスの音
+function wrong_sound() {
+	if(wrong_sound_count > 0) {
+		document.getElementById("wrong_sound_id").currentTime = 0;
+	}
+
+	document.getElementById("wrong_sound_id").play();
+
+	wrong_sound_count = 1;
 }
 
 //タイピングゲームの問題をセットする関数
@@ -137,6 +163,9 @@ function typeGame(evt)
     //　一つの単語のキーコードが全て入力された時の処理
     if (str_cnt == one_str_array_length)
     {
+      // 正解したときの音を鳴らす
+      right_sound();
+
       // 一つの単語のキーコードが全て入力された時の時間を記録する
       typEnd = new Date();
 
@@ -245,11 +274,15 @@ function typeGame(evt)
       }
     }
   }
-  else
-  {
+
+  // タイプミスしたとき
+  else {
   	// scoreを更新し、表示する
   	score = score - point_subtraction
   	vscore.textContent = score;
+
+  	wrong_sound();
+
   }
 }
 
@@ -282,7 +315,7 @@ p {
 
 </head>
 <body onload="gameSet()">
-<h1>タイピングゲーム ver 0.22</h1>
+<h1>タイピングゲーム ver 0.31</h1>
 <br>
 <p id="word">a</p>
 <p id="explanation">b</p>
@@ -295,6 +328,20 @@ p {
 
 <a id="download-link" href="#">Download:ゲームを終了する時に押してファイルを保存して下さい</a><br><br>
 <a id="ouen" style="font-size: 23px;">英単語を100個入力するとクリアです</a>
+<br>
+<br>
+<a style="font-size: 23px;">Music is VFR</a>
+
+<!-- 鳴らしたい音を読み込んでいます -->
+<audio id="wrong_sound_id" preload="auto">
+	<source src="http://cl.sd.tmu.ac.jp/~ryu/wrong_answer.mp3" type="audio/mp3">
+	<!-- <source src="http://cl.sd.tmu.ac.jp/~ryu/wrong_answer.wav" type="audio/wav"> -->
+</audio>
+
+<audio id="right_sound_id" preload="auto">
+	<source src="http://cl.sd.tmu.ac.jp/~ryu/right_answer.mp3" type="audio/mp3">
+	<!-- <source src="http://cl.sd.tmu.ac.jp/~ryu/right_answer.wav" type="audio/wav"> -->
+</audio>
 
 </body>
 </html>
