@@ -37,12 +37,6 @@ var player_input = "" //プレイヤーの間違いを含む入力
 var score = 0 //プレイヤーのスコア
 var point_addition = 100
 var point_subtraction = 10
-var time_bonus_60 = 5000
-var time_bonus_100 = 4000
-var time_bonus_150 = 3000
-var time_bonus_210 = 2000
-var time_bonus_280 = 1000
-var clear_bonus = 500
 
 var wrong_sound_count = 0; // soundのcurrentTimeをiphoneに対応させるためのフラグ
 var right_sound_count = 0;
@@ -217,37 +211,10 @@ function typeGame(evt)
         vouen.textContent = "";
 
         var clear_time = (((new Date()).getTime() - startTime) / 1000).toFixed(3)
-        var clear_score = 0
+        var time_bonus = Math.round(500000 / clear_time)
+        score = score + time_bonus
 
-        // クリア時間に応じて加算されるスコアの関数部分
-        if (clear_time <= 60)
-        {
-        	score = score + time_bonus_60
-        }
-        else if (60 < clear_time && clear_time <= 100)
-        {
-        	score = score + time_bonus_100
-        }
-        else if (100 < clear_time && clear_time <= 150)
-        {
-        	score = score + time_bonus_150
-        }
-        else if (150 < clear_time && clear_time <= 210)
-        {
-        	score = score + time_bonus_210
-        }
-        else if (210 < clear_time && clear_time <= 280)
-        {
-        	score = score + time_bonus_280
-        }
-        else if (280 < clear_time)
-        {
-        	score = score + clear_bonus
-        }
-
-        clear_score = score //クリアしたときのスコア
-
-        $.get('write_highscore.php', { score: clear_score }); //ハイスコアより高かったら実行するようにする
+        $.get('write_highscore.php', { score: score }); //ハイスコアより高かったら実行するようにする
 
         vscore.textContent = score; //スコア表示の更新
       }
@@ -322,9 +289,11 @@ p {
 <p id="inp">英単語を入力して下さい</p>
 <br>
 <br>
-<p >現在のタイム:<span id="sec">0.00</span></p>
-<p >現在のスコア:<span id="score">0</span></p>
-<p >ハイスコア:<span id="highscore">0</span></p>
+<p>現在のタイム:<span id="sec">0.00</span></p>
+<p>現在のスコア:<span id="score">0</span></p>
+<p id="score_display"></p>
+<br>
+<p>ハイスコア:<span id="highscore">0</span></p>
 
 <a id="download-link" href="#">Download:ゲームを終了する時に押してファイルを保存して下さい</a><br><br>
 <a id="ouen" style="font-size: 23px;">英単語を100個入力するとクリアです</a>
