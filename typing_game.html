@@ -118,6 +118,7 @@ function typeGame(evt)
   var vouen = document.getElementById('ouen');
   var vscore = document.getElementById('score');
   var vscore_display = document.getElementById('score_display');
+  var vnumber_of_questions = document.getElementById('number_of_questions');
 
   var starttime; //一番最初の一文字目が入力された時の時間
 
@@ -188,11 +189,14 @@ function typeGame(evt)
       //q_array[rnd[0]]を一文字毎に分割したものを格納した配列の長さ
       one_str_array_length = one_str_array.length
 
-      //英単語の表示
+      // 英単語の表示
       vword.textContent = q_array[rnd[cnt]];
 
-      //説明文の表示
+      // 説明文の表示
       vexplanation.textContent = exp_array[rnd[cnt]];
+
+      // 問題数の表示
+      vnumber_of_questions.textContent = cnt + 1;
 
       //全文字入力したか確認
       if (cnt == cnt_upper_limit) {
@@ -276,12 +280,13 @@ p {
 
 </head>
 <body onload="gameSet()">
-<h1>タイピングゲーム ver 0.31</h1>
+<h1>タイピングゲーム ver 0.40</h1>
 <br>
 <br>
-<p id="word">a</p>
+<p><span id="number_of_questions">1</span>問目</p>
+<p id="word" style="font-size: 40px;">a</p>
 <p id="explanation">b</p>
-<p id="inp" style="color: red;">英単語を入力して下さい</p>
+<p id="inp" style="color: red;" style="font-size: 40px;">表示されている英単語を入力して下さい</p>
 <br>
 <br>
 <p>現在のタイム:<span id="sec">0.00</span></p>
