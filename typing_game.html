@@ -150,6 +150,7 @@ function typeGame(evt)
     vinp.textContent = input_str;
     str_cnt++ ;
     vinp.style.color = 'blue';
+    vinp.style.fontSize = 32 + "pt";
 
     //　一つの単語のキーコードが全て入力された時の処理
     if (str_cnt == one_str_array_length) {
@@ -179,6 +180,7 @@ function typeGame(evt)
       str_cnt = 0;
       vinp.textContent = "入力が表示されます";
       vinp.style.color = 'black';
+      vinp.style.fontSize = 23 + "pt";
       input_str = ""
       cnt ++; //カウント数を＋１にする
 
