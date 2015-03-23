@@ -117,23 +117,21 @@ function typeGame(evt)
   var vinp = document.getElementById('inp');
   var vouen = document.getElementById('ouen');
   var vscore = document.getElementById('score');
+  var vscore_display = document.getElementById('score_display');
 
   var starttime; //一番最初の一文字目が入力された時の時間
 
   var kc;  //入力されたキーコードを格納する変数
   //入力されたキーのキーコードを取得
-  if (document.all)
-  {
+  if (document.all) {
     kc = event.keyCode;
   }
-  else
-  {
+  else {
     kc = evt.which;
   }
 
   //一番最初の一文字目が入力された時の時間を得る
-  if (cnt == 0 && str_cnt == 0)
-  {
+  if (cnt == 0 && str_cnt == 0) {
     startTime = (new Date()).getTime();
     timer();
   }
@@ -141,11 +139,9 @@ function typeGame(evt)
   player_input = player_input + kc_to_str[kc]
 
   //入力されたキーコードと、問題文のキーコードの文字列を比較
-  if (kc_to_str[kc] == one_str_array[str_cnt])
-  {
+  if (kc_to_str[kc] == one_str_array[str_cnt]) {
     // 単語の最初の1文字が入力された時間を記録する
-    if (str_cnt == 0)
-    {
+    if (str_cnt == 0) {
       typStart = new Date();
     }
 
@@ -155,8 +151,7 @@ function typeGame(evt)
     vinp.style.color = 'blue';
 
     //　一つの単語のキーコードが全て入力された時の処理
-    if (str_cnt == one_str_array_length)
-    {
+    if (str_cnt == one_str_array_length) {
       // 正解したときの音を鳴らす
       right_sound();
 
@@ -174,8 +169,9 @@ function typeGame(evt)
       download_string = download_string + user_input;
 
       // scoreを更新し、表示する
-      score = score + point_addition
+      score = score + point_addition;
       vscore.textContent = score;
+      vscore_display.textContent = "正解！:+" + point_addition;
 
       // 初期化
       player_input = ""
@@ -199,8 +195,7 @@ function typeGame(evt)
       vexplanation.textContent = exp_array[rnd[cnt]];
 
       //全文字入力したか確認
-      if (cnt == cnt_upper_limit)
-      {
+      if (cnt == cnt_upper_limit) {
         clearTimeout(timerid);
         vword.textContent = "おめでとうございます！";
         vexplanation.textContent = "クリアしました！";
@@ -210,6 +205,7 @@ function typeGame(evt)
         vinp.style.color = 'green';
         vouen.textContent = "";
 
+        // タイムボーナスとクリアタイムの計算
         var clear_time = (((new Date()).getTime() - startTime) / 1000).toFixed(3);
         var time_bonus = Math.round(500000 / clear_time);
         score = score + time_bonus;
@@ -217,25 +213,22 @@ function typeGame(evt)
         $.get('write_highscore.php', { highscore: score }); //ハイスコアより高かったら実行するようにする
 
         vscore.textContent = score; //スコア表示の更新
+        vscore_display.textContent = "タイムボーナス！！:+" + time_bonus;
       }
 
-      if (cnt == 10)
-      {
+      if (cnt == 10) {
         vouen.textContent = "10問クリア！どんどんいこう！";
         vouen.style.color = 'maroon';
       }
-      if (cnt == 25)
-      {
+      if (cnt == 25) {
         vouen.textContent = "25問クリア！いい調子！";
         vouen.style.color = 'teal';
       }
-      if (cnt == 50)
-      {
+      if (cnt == 50) {
         vouen.textContent = "50問クリア！ちょうど半分！";
         vouen.style.color = 'navy';
       }
-      if (cnt == 75)
-      {
+      if (cnt == 75) {
         vouen.textContent = "75問クリア！あともう一息！";
         vouen.style.color = 'blue';
       }
@@ -247,6 +240,7 @@ function typeGame(evt)
   	// scoreを更新し、表示する
   	score = score - point_subtraction
   	vscore.textContent = score;
+  	vscore_display.textContent = "タイプミス:-" + point_subtraction;
 
   	wrong_sound();
 
@@ -291,11 +285,13 @@ p {
 <br>
 <p>現在のタイム:<span id="sec">0.00</span></p>
 <p>現在のスコア:<span id="score">0</span></p>
-<p id="score_display"></p>
+<p id="score_display">スコアの増減が表示されます</p>
 <br>
 <p>ハイスコア:<span id="highscore">0</span></p>
 
-<a id="download-link" href="#">Download:ゲームを終了する時に押してファイルを保存して下さい</a><br><br>
+<a id="download-link" href="#">Download:ゲームを終了する時に押してファイルを保存して下さい</a>
+<br>
+<br>
 <a id="ouen" style="font-size: 23px;">英単語を100個入力するとクリアです</a>
 <br>
 <br>
