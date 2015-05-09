@@ -103,10 +103,6 @@ function gameSet()
   var vexplanation = document.getElementById('explanation');
   vexplanation.textContent = exp_array[rnd[cnt]];
 
-  //入力される単語の表示
-  var vinp = document.getElementById('inp');
-  vinp.textContent = "表示されている英単語を入力して下さい";
-
   //ハイスコアのload
   $.get('load_highscore.php', function(data) {
   	$('#highscore').html(data);
@@ -117,9 +113,8 @@ function gameSet()
 function typeGame(evt)
 {
   var vword = document.getElementById('word');
-  var vtyped_word = document.getElementById('typed_word');
+  var vtyped_word = document.getElementById('typed_word'); //既に入力された単語の文字列の部分の変数
   var vexplanation = document.getElementById('explanation');
-  var vinp = document.getElementById('inp');
   var vouen = document.getElementById('ouen');
   var vscore = document.getElementById('score');
   var vscore_display = document.getElementById('score_display');
@@ -136,7 +131,7 @@ function typeGame(evt)
     kc = evt.which;
   }
 
-  //一番最初の一文字目が入力された時の時間を得る
+  //一番最初の単語の一文字目が入力された時の時間を得る
   if (cnt == 0 && str_cnt == 0) {
     startTime = (new Date()).getTime();
     timer();
@@ -152,14 +147,11 @@ function typeGame(evt)
     }
 
     input_str = input_str + one_str_array[str_cnt]
-    vinp.textContent = input_str;
     str_cnt++ ;
-    vinp.style.color = 'blue';
-    vinp.style.fontSize = 30 + "pt";
 
-    vtyped_word.textContent = input_str;
+    vtyped_word.textContent = input_str; //既に入力された単語の文字列の部分の代入を行っている
     vtyped_word.style.color = 'gray';
-    vword.textContent = one_str_array.join("").substring(str_cnt);
+    vword.textContent = one_str_array.join("").substring(str_cnt); //まだ入力されていない単語の文字列の部分の代入を行っている
 
     //　一つの単語のキーコードが全て入力された時の処理
     if (str_cnt == one_str_array_length) {
@@ -187,9 +179,6 @@ function typeGame(evt)
       // 初期化
       player_input = ""
       str_cnt = 0;
-      vinp.textContent = "入力が表示されます";
-      vinp.style.color = 'black';
-      vinp.style.fontSize = 30 + "pt";
       input_str = ""
       cnt ++; //カウント数を＋１にする
 
@@ -213,10 +202,9 @@ function typeGame(evt)
       //全文字入力したか確認
       if (cnt == cnt_upper_limit) {
         clearTimeout(timerid);
-        vword.textContent = "おめでとうございます！";
+        vword.textContent = "ゲームクリア！";
         vtyped_word.textContent = "";
-        vexplanation.textContent = "クリアしました！";
-        vinp.textContent = "";
+        vexplanation.textContent = "プレイして頂きありがとうございました！";
         vword.style.color = 'red';
         vexplanation.style.color = 'aqua';
         vouen.textContent = "";
@@ -232,6 +220,10 @@ function typeGame(evt)
         vscore_display.textContent = "タイムボーナス！！:+" + time_bonus;
       }
 
+      if (cnt == 1) {
+        vouen.textContent = "1問クリア！初めの一歩！";
+        vouen.style.color = 'brack';
+      }
       if (cnt == 10) {
         vouen.textContent = "10問クリア！どんどんいこう！";
         vouen.style.color = 'maroon';
@@ -241,7 +233,7 @@ function typeGame(evt)
         vouen.style.color = 'teal';
       }
       if (cnt == 50) {
-        vouen.textContent = "50問クリア！ちょうど半分！";
+        vouen.textContent = "50問クリア！折り返し地点到達！";
         vouen.style.color = 'navy';
       }
       if (cnt == 75) {
@@ -277,19 +269,18 @@ p {
 </head>
 <body onload="gameSet()">
 <h1>タイピングゲーム ver 1.00</h1>
-<a id="ouen" style="font-size: 23px;">英単語を100個入力するとクリアです</a><br>
-<br>
 <p><span id="number_of_questions">1</span>問目</p>
-<p style="font-size: 40px;"><span id="typed_word"></span><span id="word">a</span></p>
+<p style="font-size: 50px;"><span id="typed_word"></span><span id="word">a</span></p>
 <p id="explanation">b</p>
-<p><span id="inp" style="color: red;" >c</span></p>
-<br>
-<br>
 <p>現在のタイム:<span id="sec">0.00</span></p>
 <p>現在のスコア:<span id="score">0</span></p>
 <p id="score_display">スコアの増減が表示されます</p>
-<br>
 <p>ハイスコア:<span id="highscore">0</span></p>
+<br>
+<a id="ouen" style="font-size: 23px;">〜ゲーム説明〜<br>
+表示されている英単語を100単語入力してスコアを競います。<br>
+スコアはできるだけ速く正確にタイピングを行うほど高くなります。<br>
+キーを入力するとゲームがスタートします。</a><br>
 <br>
 <a style="font-size: 20px;">本ゲームでの効果音及び英単語とその訳語は、CCライセンスに基づいて利用しています。</a><br>
 <a href="http://musicisvfr.com/free/se/quiz01.html" target="_blank" style="font-size: 23px;">Music is VFR</a><br>
