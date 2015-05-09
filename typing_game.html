@@ -103,6 +103,10 @@ function gameSet()
   var vexplanation = document.getElementById('explanation');
   vexplanation.textContent = exp_array[rnd[cnt]];
 
+  //入力される単語の表示
+  var vinp = document.getElementById('inp');
+  vinp.textContent = "表示されている英単語を入力して下さい";
+
   //ハイスコアのload
   $.get('load_highscore.php', function(data) {
   	$('#highscore').html(data);
@@ -180,7 +184,7 @@ function typeGame(evt)
       str_cnt = 0;
       vinp.textContent = "入力が表示されます";
       vinp.style.color = 'black';
-      vinp.style.fontSize = 23 + "pt";
+      vinp.style.fontSize = 30 + "pt";
       input_str = ""
       cnt ++; //カウント数を＋１にする
 
@@ -271,7 +275,7 @@ p {
 <p><span id="number_of_questions">1</span>問目</p>
 <p id="word" style="font-size: 40px;">a</p>
 <p id="explanation">b</p>
-<p id="inp" style="color: red;" style="font-size: 40px;">表示されている英単語を入力して下さい</p>
+<p><span id="inp" style="color: red;" >c</span></p>
 <br>
 <br>
 <p>現在のタイム:<span id="sec">0.00</span></p>
