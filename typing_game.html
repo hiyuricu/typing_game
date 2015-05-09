@@ -150,7 +150,7 @@ function typeGame(evt)
     vinp.textContent = input_str;
     str_cnt++ ;
     vinp.style.color = 'blue';
-    vinp.style.fontSize = 32 + "pt";
+    vinp.style.fontSize = 30 + "pt";
 
     //　一つの単語のキーコードが全て入力された時の処理
     if (str_cnt == one_str_array_length) {
@@ -205,10 +205,9 @@ function typeGame(evt)
         clearTimeout(timerid);
         vword.textContent = "おめでとうございます！";
         vexplanation.textContent = "クリアしました！";
-        vinp.textContent = "ダウンロードをお願いします";
+        vinp.textContent = "";
         vword.style.color = 'red';
         vexplanation.style.color = 'aqua';
-        vinp.style.color = 'green';
         vouen.textContent = "";
 
         // タイムボーナスとクリアタイムの計算
@@ -253,37 +252,21 @@ function typeGame(evt)
   }
 }
 
-
-// download buttonの部分
-var $id = function(id) {return document.getElementById(id);}
-
-window.onload = function()
-{
-    $id("download-link").addEventListener("click", function(){
-        var value = download_string;
-        var href = "data:application/octet-stream," + encodeURIComponent(value);
-        this.setAttribute("href", href);
-        download_string = ""
-    }, false);
-}
-
 </script>
 
 <style type="text/css">
-
 p {
   font-weight: bold; /* normal　太さ */
   font-size: 30px; /* 大きさ */
   text-align: center; /* left, right 位置*/
   line-height: 40px; /* 行の高さ(40-20=20を上下に振り分ける) */
 }
-
 </style>
 
 </head>
 <body onload="gameSet()">
 <h1>タイピングゲーム ver 0.40</h1>
-<br>
+<a id="ouen" style="font-size: 23px;">英単語を100個入力するとクリアです</a><br>
 <br>
 <p><span id="number_of_questions">1</span>問目</p>
 <p id="word" style="font-size: 40px;">a</p>
@@ -296,13 +279,6 @@ p {
 <p id="score_display">スコアの増減が表示されます</p>
 <br>
 <p>ハイスコア:<span id="highscore">0</span></p>
-
-<a id="download-link" href="#">Download:ゲームを終了する時に押してファイルを保存して下さい</a>
-<br>
-<br>
-<a id="ouen" style="font-size: 23px;">英単語を100個入力するとクリアです</a>
-<br>
-<br>
 <a style="font-size: 23px;">Music is VFR<br>
 <br>
 800 Basic_English - Japanese glossary<br>
