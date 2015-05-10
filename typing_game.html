@@ -97,7 +97,9 @@ function gameSet()
 
   //英単語の表示
   var vword = document.getElementById('word');
-  vword.textContent = q_array[rnd[cnt]];
+  vword.textContent = q_array[rnd[cnt]].substring(str_cnt + 1);
+  var vtyping_word = document.getElementById('typing_word');
+  vtyping_word.textContent = q_array[rnd[cnt]].substring(str_cnt,str_cnt + 1);
 
   //説明文の表示
   var vexplanation = document.getElementById('explanation');
@@ -113,6 +115,7 @@ function gameSet()
 function typeGame(evt)
 {
   var vword = document.getElementById('word');
+  var vtyping_word = document.getElementById('typing_word');
   var vtyped_word = document.getElementById('typed_word'); //既に入力された単語の文字列の部分の変数
   var vexplanation = document.getElementById('explanation');
   var vouen = document.getElementById('ouen');
@@ -151,7 +154,9 @@ function typeGame(evt)
 
     vtyped_word.textContent = input_str; //既に入力された単語の文字列の部分の代入を行っている
     vtyped_word.style.color = 'gray';
-    vword.textContent = one_str_array.join("").substring(str_cnt); //まだ入力されていない単語の文字列の部分の代入を行っている
+    vword.textContent = q_array[rnd[cnt]].substring(str_cnt + 1); //まだ入力されていない単語の文字列の部分の代入を行っている
+    vtyping_word.textContent = q_array[rnd[cnt]].substring(str_cnt,str_cnt + 1);
+    vtyping_word.style.color = 'black';
 
     //　一つの単語のキーコードが全て入力された時の処理
     if (str_cnt == one_str_array_length) {
@@ -190,7 +195,8 @@ function typeGame(evt)
       one_str_array_length = one_str_array.length
 
       // 英単語の表示
-      vword.textContent = q_array[rnd[cnt]];
+      vword.textContent = q_array[rnd[cnt]].substring(str_cnt + 1);
+      vtyping_word.textContent = q_array[rnd[cnt]].substring(str_cnt,str_cnt + 1);
       vtyped_word.textContent = "";
 
       // 説明文の表示
@@ -203,6 +209,7 @@ function typeGame(evt)
       if (cnt == cnt_upper_limit) {
         clearTimeout(timerid);
         vword.textContent = "ゲームクリア！";
+        vtyping_word.textContent = "";
         vtyped_word.textContent = "";
         vexplanation.textContent = "プレイして頂きありがとうございました！";
         vword.style.color = 'red';
@@ -250,6 +257,9 @@ function typeGame(evt)
   	vscore.textContent = score;
   	vscore_display.textContent = "タイプミス:-" + point_subtraction;
 
+  	// タイプしている文字だけを赤に変える
+  	vtyping_word.style.color = 'red';
+
   	wrong_sound();
 
   }
@@ -270,7 +280,7 @@ p {
 <body onload="gameSet()">
 <h1>タイピングゲーム</h1>
 <p><span id="number_of_questions">1</span>問目</p>
-<p style="font-size: 50px;"><span id="typed_word"></span><span id="word">a</span></p>
+<p style="font-size: 50px;"><span id="typed_word"></span><span id="typing_word"></span><span id="word">a</span></p>
 <p id="explanation">b</p>
 <p>現在のタイム:<span id="sec">0.00</span></p>
 <p>現在のスコア:<span id="score">0</span></p>
